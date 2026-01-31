@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频合并工具 Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>视频合并工具 Pro</h1>
+            <p>支持 mp4 / flv / ts | 拖拽排序 | 自动刷新</p>
+        </header>
+
+        <div class="main-layout">
+            <main>
+                <div id="file-list-container">
+                    <p id="loading-text">正在加载视频列表...</p>
+                    <div id="file-list"></div>
+                </div>
+            </main>
+
+            <aside id="selected-panel">
+                <h3>待合并列表 (拖拽排序)</h3>
+                <div id="selected-list-container">
+                    <div id="selected-list">
+                        <p class="empty-text">请从左侧勾选视频</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button id="merge-btn" disabled>合并 (0)</button>
+                </div>
+            </aside>
+        </div>
+
+        <div id="status-container">
+            <pre id="status">准备就绪。</pre>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

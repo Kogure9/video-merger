@@ -1,0 +1,78 @@
+:root {
+    --bg-color: #1e1e1e;
+    --text-color: #d4d4d4;
+    --primary-color: #007acc;
+    --border-color: #3e3e42;
+    --container-bg: #252526;
+    --hover-bg: #333333;
+    --success-color: #4CAF50;
+    --error-color: #f44336;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+header { text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+.main-layout { display: flex; gap: 20px; height: 70vh; }
+main { flex: 2; display: flex; flex-direction: column; }
+aside { flex: 1; display: flex; flex-direction: column; }
+
+/* 列表样式 */
+#file-list-container, #selected-list-container {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    background: #1e1e1e;
+}
+
+.folder-group { margin-bottom: 10px; }
+.folder-name { color: var(--primary-color); font-weight: bold; padding: 5px; cursor: pointer; }
+.folder-name:hover { background-color: var(--hover-bg); }
+.file-item { display: block; padding: 4px 10px; cursor: pointer; }
+.file-item:hover { background-color: var(--hover-bg); }
+.file-item input { margin-right: 8px; }
+
+/* 已选列表 */
+.selected-item {
+    background-color: var(--hover-bg);
+    padding: 8px;
+    margin-bottom: 4px;
+    border: 1px solid var(--border-color);
+    cursor: move;
+    font-size: 0.9em;
+}
+.selected-item.dragging { opacity: 0.5; background: var(--primary-color); }
+
+/* 按钮与状态 */
+.actions { margin-top: 10px; }
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:disabled { background-color: #555; cursor: not-allowed; }
+
+#status-container { margin-top: 20px; padding: 10px; background: #111; border-radius: 4px; }
+#status.success { color: var(--success-color); }
+#status.error { color: var(--error-color); }
