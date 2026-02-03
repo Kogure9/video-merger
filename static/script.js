@@ -7,11 +7,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedFiles = [];
 
+    // 工具函数：格式化文件大小
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 B';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+    }
+
     // 1. 获取并渲染列表
     async function fetchAndRenderVideos() {
         try {
             const response = await fetch('/api/videos');
-            const allFiles = await response.json();
+            // 注意：后端已经按时间倒序（最新的在前）排好序了
+            const allFiles = await response.json(); 
             loadingText.style.display = 'none';
 
             if (!allFiles || allFiles.length === 0) {
@@ -21,17 +32,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 按文件夹分组
             const filesByDir = {};
-            allFiles.forEach(path => {
-                const parts = path.split('/');
+            const dirOrder = []; // 用于保持文件夹的排序顺序（按文件夹内最新文件的顺序）
+
+            allFiles.forEach(file => {
+                const parts = file.path.split('/');
                 const fileName = parts.pop();
                 const dir = parts.join('/') || '根目录';
-                if (!filesByDir[dir]) filesByDir[dir] = [];
-                filesByDir[dir].push({ path, fileName });
+
+                if (!filesByDir[dir]) {
+                    filesByDir[dir] = [];
+                    dirOrder.push(dir); // 第一次遇到该目录时记录顺序
+                }
+                
+                // 将文件信息存入，包含大小和路径
+                filesByDir[dir].push({ 
+                    path: file.path, 
+                    fileName: fileName,
+                    size: file.size
+                });
             });
 
             // 渲染 HTML
             fileListDiv.innerHTML = '';
-            for (const dir in filesByDir) {
+            
+            // 使用 dirOrder 遍历，确保“包含最新视频的文件夹”排在最前面
+            dirOrder.forEach(dir => {
                 const group = document.createElement('div');
                 group.className = 'folder-group';
                 
@@ -46,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 group.appendChild(title);
 
                 const container = document.createElement('div');
+                
                 filesByDir[dir].forEach(file => {
                     const label = document.createElement('label');
                     label.className = 'file-item';
@@ -55,12 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     cb.checked = selectedFiles.includes(file.path);
                     
                     label.appendChild(cb);
-                    label.appendChild(document.createTextNode(file.fileName));
+                    // 显示文件名 + 大小
+                    label.appendChild(document.createTextNode(`${file.fileName} (${formatBytes(file.size)})`));
                     container.appendChild(label);
                 });
                 group.appendChild(container);
                 fileListDiv.appendChild(group);
-            }
+            });
         } catch (e) {
             loadingText.textContent = "加载失败: " + e.message;
         }

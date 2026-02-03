@@ -1,19 +1,14 @@
-version: '3.8'
-
 services:
   video-merger:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: video-merger
     ports:
       - "8082:8082"
     volumes:
-      # 左边：宿主机真实路径 (您提供的新路径)
-      # 右边：容器内路径 (对应 VIDEO_ROOT)
+      # 左边是您的 NAS 真实路径，右边是容器内路径
       - "/vol1/1000/Docker/bililive-go-master/Videos:/root/Videos"
     environment:
-      # 告诉 Go 程序去哪里找视频
+      # 告诉 Go 程序去 /root/Videos 找视频
       - VIDEO_ROOT=/root/Videos
       - TZ=Asia/Shanghai
     restart: always
